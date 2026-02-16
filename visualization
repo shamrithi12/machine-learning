@@ -1,0 +1,80 @@
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+import matplotlib.pyplot as ph
+import seaborn as sns
+df=pd.read_csv(r"C:\Users\TEMP.KCW.068\Downloads\10.Sales Records.csv")
+df.head(5)    
+
+df.info()
+
+df.describe()
+
+df["Sales Channel"].unique()
+
+df["Order Priority"].unique()
+
+df["Sales Channel"].value_counts()
+
+df["Order Priority"].value_counts().mean()
+
+df["Sales Channel"].value_counts().mean()
+
+df["Item Type"].value_counts()
+
+df["Region"].value_counts()
+
+df.groupby("Sales Channel")['Total Profit'].mean().plot(kind='bar')
+
+sns.histplot(df["Units Sold"],kde=True)
+plt.show()
+
+df.groupby("Country")["Total Revenue"].mean()
+
+df[df["Country"]=="France"]["Total Revenue"].mean()
+
+df.groupby("Country")["Total Profit"].mean()
+
+df["Units Sold"].hist(bins=5)
+plt.show()
+
+df[df["Order Date"]=='10/18/2014']["Total Profit"]
+
+df[df["Order Date"]=='10/18/2014']["Total Revenue"]
+
+sns.countplot(data=df,y="Region",hue='Sales Channel')
+plt.grid(True)
+plt.show()
+
+plt.figure(figsize=(20,10))
+sns.boxplot(data=df,x='Item Type',y="Total Profit")
+plt.tight_layout()
+plt.show()
+
+plt.figure(figsize=(20,10))
+sns.boxplot(data=df,x='Sales Channel',y="Total Profit")
+plt.tight_layout()
+plt.show()
+
+plt.plot(2,2,4)
+df["Unit Cost"].value_counts().plot(figsize=(6,6),kind="bar",color="yellow")
+plt.title("Unit Cost")
+plt.xlabel('No.of units');plt.ylabel('Unit Cost')
+
+top_ten_country=df.groupby('Country')['Total Profit'].sum().nlargest(10)
+top_ten_country=top_ten_country.sort_values(ascending=False)
+plt.figure(figsize=(10,6))
+top_ten_country.plot(kind='bar',color='red')
+plt.title('Total Profit by Top Ten Country')
+plt.xlabel('country')
+plt.ylabel('Total Profit')
+plt.xticks(rotation=45)
+plt.grid(axis='y',linestyle="--")
+plt.show()
+
+order_priority_distribution=df["Order Priority"].value_counts()
+plt.figure(figsize=(8,8))
+plt.pie(order_priority_distribution,labels=order_priority_distribution.index,autopct='%1.1f%%',colors=['Purple','lightgreen','red','Orange'])
+plt.title('Overall Sales Distribution by Order priority')
+plt.show()
+  
