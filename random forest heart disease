@@ -1,0 +1,24 @@
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.metrics import accuracy_score,classification_report
+
+data = pd.read_csv(r"C:\Users\1mscda53\Documents\5.heart.csv")
+
+print(data.head(10))
+
+x = data.values[:, 0:13]
+y = data.values[:, 13]
+
+x_train, x_test, y_train, y_test = train_test_split(
+    x, y, test_size=0.3, random_state=100
+)
+
+model = RandomForestClassifier()
+model.fit(x_train, y_train)
+RandomForestClassifier()
+y_pred = model.predict(x_test)
+
+print("Accuracy Score:", accuracy_score(y_test, y_pred))
+print("\nClassification Report:")
+print(classification_report(y_test, y_pred))
