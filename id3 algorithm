@@ -1,0 +1,31 @@
+import pandas as pd
+import matplotlib.pyplot as plt
+from sklearn.model_selection import train_test_split
+from sklearn.tree import DecisionTreeClassifier, plot_tree
+from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
+
+
+data = pd.read_csv(
+    r"C:\Users\1mscda53\Documents\4.banknote.csv"
+)
+
+data.columns = ["variance", "skewness", "kurtosis", "entropy", "class"]
+
+x = data.drop("class", axis=1)
+y = data["class"]
+
+x_train, x_test, y_train, y_test = train_test_split(
+    x, y, test_size=0.2, random_state=42
+)
+
+model = DecisionTreeClassifier(criterion="entropy")
+
+
+model.fit(x_train, y_train)
+
+y_pred = model.predict(x_test)
+
+
+print("Accuracy Score:", accuracy_score(y_test, y_pred))
+print("\nClassification Report:")
+print(classification_report(y_test, y_pred))
