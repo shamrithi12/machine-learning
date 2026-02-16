@@ -1,0 +1,72 @@
+import pandas as pd
+import numpy as np
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.svm import SVC
+from sklearn.pipeline import Pipeline
+from sklearn.metrics import accuracy_score, classification_report, ConfusionMatrixDisplay
+from sklearn.utils import shuffle
+from time import time
+import matplotlib.pyplot as plt
+
+train_path = r"C:\Users\staff\Desktop\7.2.trec10_train.csv"
+test_path = r"C:\Users\staff\Desktop\7.1.trec10_test.csv"
+df_train = shuffle(pd.read_csv(train_path))
+df_test = shuffle(pd.read_csv(test_path))
+X_train = df_train['Query']
+y_train = df_train['Type']
+X_test = df_test['Query']
+y_test = df_test['Type']
+
+
+model = Pipeline([
+    ('tfidf', TfidfVectorizer(
+        lowercase=True,
+        stop_words='english',
+        ngram_range=(1, 2)
+    )),
+    ('svm', SVC(
+        kernel='linear',
+        C=1.0,
+        probability=True,
+        random_state=42
+    ))
+])
+
+
+start_time = time()
+model.fit(X_train, y_train)
+end_time = time()
+print("Training Time:", round(end_time - start_time, 2), "seconds")
+y_pred = model.predict(X_test)
+
+
+
+  
+ConfusionMatrixDisplay.from_estimator(
+    model,
+    X_test,
+    y_test,
+    cmap='Blues'
+)
+plt.title("Confusion Matrix - SVM Chatbot Query Classification")
+  plt.show()
+
+
+def predict_query_type(query):
+    prediction = model.predict([query])[0]
+    return prediction
+
+
+  print("\nSample Predictions:\n")
+
+queries = [
+    "Who is the president of India?",
+    "What does CPU stand for?",
+    "How many planets are there?",
+    "Where is the Eiffel Tower located?",
+    "What is machine learning?"
+]
+
+for q in queries:
+    print(f"Query: {q}")
+    print(f"Predicted Type: {predict_query_type(q)}\n")
