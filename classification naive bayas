@@ -1,0 +1,41 @@
+from sklearn.datasets import fetch_20newsgroups
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.naive_bayes import MultinomialNB
+from sklearn.pipeline import make_pipeline
+from sklearn.metrics import ConfusionMatrixDisplay
+from sklearn.metrics import accuracy_score, classification_report
+
+data = fetch_20newsgroups()
+
+from pprint import pprint
+pprint(list(data.target_names))
+
+categories = ['talk.religion.misc','soc.religion.christian','sci.space','comp.graphics','rec.motorcycles']
+train = fetch_20newsgroups(subset = 'train', categories = categories)
+test = fetch_20newsgroups(subset = 'test', categories = categories)
+print(train.data[5])
+
+model = make_pipeline(TfidfVectorizer(), MultinomialNB())
+model.fit(train.data, train.target)
+labels = model.predict(test.data)
+
+print('Accuracy:', accuracy_score(test.target, labels) * 100)
+print('Classification report:', classification_report(test.target, labels))
+
+ConfusionMatrixDisplay.from_estimator(model, test.data, test.target,
+display_labels=test.target_names)
+
+def predict_category(S, train=train, model=model):
+ pred = model.predict([S])
+ return train.target_names[pred[0]]
+predict_category('discussing islam vs atheism')
+
+predict_category('determining the screen resolution')
+
+predict_category('sending a payload to the ISS')
+
+
+predict_category('')
+
+
+
