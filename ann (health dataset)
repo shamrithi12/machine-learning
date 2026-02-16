@@ -1,0 +1,51 @@
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
+from sklearn.neural_network import MLPClassifier
+from sklearn.metrics import classification_report, confusion_matrix, accuracy_score
+
+df = pd.read_excel(r"C:\Users\TEMP.KCW.101\Documents\6.ANN HEALTH DATASET.xlsx")
+print(df.head())
+
+print("Dataset shape:", df.shape)
+
+X = df.iloc[:, 0:19]   # Input neurons
+y = df.iloc[:, 20]     # Output neuron (Risk)
+
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+
+scaler = StandardScaler()
+X_train = scaler.fit_transform(X_train)
+X_test = scaler.transform(X_test)
+
+
+ann_model = MLPClassifier(
+    hidden_layer_sizes=(13, 13, 13),  # Hidden layers
+    activation='relu',
+    solver='adam',
+    max_iter=500,
+    random_state=42
+)
+
+ann_model.fit(X_train, y_train)
+
+
+y_pred = ann_model.predict(X_test)
+
+
+print("Confusion Matrix:")
+print(confusion_matrix(y_test, y_pred))
+print("\nClassification Report:")
+print(classification_report(y_test, y_pred))
+print("\nAccuracy:", accuracy_score(y_test, y_pred) * 100)
+
+
+new_patient = [[65, 120, 80, 95, 22, 98.6, 140, 1, 0, 1, 0, 98, 7.4, 4.1, 140, 3.8, 90, 1, 0]]
+new_patient_scaled = scaler.transform(new_patient)
+risk = ann_model.predict(new_patient_scaled)
+if risk[0] == 1:
+    print("High-Risk Patient")
+else:
+    print("Low-Risk Patient")
+
