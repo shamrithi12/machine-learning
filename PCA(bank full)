@@ -1,0 +1,63 @@
+import pandas as pd
+import numpy as np
+import seaborn as sns
+import matplotlib.pyplot as plt
+from sklearn.preprocessing import StandardScaler
+from sklearn.decomposition import PCA
+from sklearn.model_selection import train_test_split 
+
+import pandas as pd
+df = pd.read_csv(r'C:\Users\KAUSI\Downloads\MSC DA -ML Datasets\MSC DA -ML Datasets (2024 -25 Batch)\bank-full.csv',delimiter=';')
+print(df.head())
+
+df.describe()
+
+df.shape
+
+sns.countplot(x='y',data=df,label ="Count")  
+plt.xlabel("count")  
+plt.show() 
+
+df_encoded=pd.get_dummies(df,drop_first=True)
+print(f"Missing values: \n{df_encoded.isnull().sum()}")
+
+plt.figure(figsize=(15,5))
+sns.countplot(x ="job" , data = df , label = "Count")
+plt.show() 
+
+
+sns.countplot(x ="marital", data =df ,hue ="y")
+plt.show() 
+
+plt.figure(figsize=(15,5))
+sns.countplot(x="education" , data = df , label = "y")
+plt.show() 
+
+scalar =StandardScaler()
+df_scaled = scalar.fit_transform(df_encoded)  
+pca = PCA(n_components=2)
+df_pca = pca.fit_transform(df_scaled)
+df_pca_df = pd.DataFrame(df_pca, columns=['PCA1', 'PCA2'])
+explained_variance = pca.explained_variance_ratio_
+print(explained_variance)
+
+plt.figure(figsize=(8, 6))
+plt.bar(range(1, len(explained_variance)+1), explained_variance, alpha=0.7, align='center')
+plt.xlabel('Principal Components')
+plt.ylabel('Explained Variance Ratio')
+plt.title('Explained Variance by Principal Components')
+plt.show()
+
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+plt.figure(figsize=(8, 6))
+sns.scatterplot(
+    x=df_pca_df['PCA1'],
+    y=df_pca_df['PCA2'],
+    alpha=0.7,
+    s=60)
+plt.title('PCA: Bank Marketing Data')
+plt.xlabel('Principal Component 1')
+plt.ylabel('Principal Component 2')
+plt.show()
