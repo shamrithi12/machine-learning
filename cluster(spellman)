@@ -1,42 +1,39 @@
-import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy.cluster.hierarchy import dendrogram, linkage
 from sklearn.cluster import AgglomerativeClustering
 from sklearn.preprocessing import StandardScaler
 
-df = pd.read_csv(r"C:\Users\yazhi\Documents\MSC DA -ML Datasets (2024 -
-25 Batch)\MSC DA -ML Datasets (2024 -25 Batch)\11.Spellman.csv")
-print("First 5 rows of dataset:")
+df = pd.read_csv(r"C:\Users\KAUSI\Downloads\MSC DA -ML Datasets\MSC DA -ML Datasets (2024 -25 Batch)\11.Spellman.csv")
 df.head()
-
 
 print("\nMissing values:")
 print(df.isna().sum())
 
-X=df.select_dtypes(include=[np.number])
-
-
+X=df.select_dtypes(include=[np.number]) 
 scaler = StandardScaler()
 X_scaled = scaler.fit_transform(X)
 
 plt.figure(figsize=(10, 6))
- linked = linkage(X_scaled, method='ward')
+linked = linkage(X_scaled, method='ward')
 dendrogram(linked,orientation='top',distance_sort='descending',show_leaf_counts=False)
 plt.title("Hierarchical Clustering Dendrogram (Yeast Data)")
 plt.xlabel("Samples")
 plt.ylabel("Distance")
 plt.show()
 
+rom sklearn.cluster import AgglomerativeClustering
 
-cluster_model = AgglomerativeClustering(n_clusters=4, affinity='euclidean',linkage='ward')
+cluster_model = AgglomerativeClustering(
+    n_clusters=4,
+    linkage='ward'
+)
+
 labels = cluster_model.fit_predict(X_scaled)
 
 df['Cluster'] = labels
- print("\nCluster Distribution:")
+print("\nCluster Distribution:")
 print(df['Cluster'].value_counts())
-
-
 
 plt.figure(figsize=(8, 6))
 plt.scatter(X_scaled[:, 0], X_scaled[:, 1], c=labels, cmap='viridis')
@@ -44,4 +41,4 @@ plt.title("Hierarchical Clustering Result")
 plt.xlabel("Feature 1")
 plt.ylabel("Feature 2")
 plt.colorbar(label="Cluster")
-plt.show()
+plt.show() 
