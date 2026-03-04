@@ -1,3 +1,6 @@
+import numpy as np
+import scipy
+import pandas as pd
 from sklearn.datasets import fetch_20newsgroups
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.naive_bayes import MultinomialNB
@@ -9,7 +12,6 @@ data = fetch_20newsgroups()
 
 from pprint import pprint
 pprint(list(data.target_names))
-
 categories = ['talk.religion.misc','soc.religion.christian','sci.space','comp.graphics','rec.motorcycles']
 train = fetch_20newsgroups(subset = 'train', categories = categories)
 test = fetch_20newsgroups(subset = 'test', categories = categories)
@@ -28,14 +30,18 @@ display_labels=test.target_names)
 def predict_category(S, train=train, model=model):
  pred = model.predict([S])
  return train.target_names[pred[0]]
+
 predict_category('discussing islam vs atheism')
 
 predict_category('determining the screen resolution')
 
 predict_category('sending a payload to the ISS')
 
-
-predict_category('')
-
-
-
+print('Accuracy:', accuracy_score(test.target, labels) * 100)
+ConfusionMatrixDisplay.from_estimator(
+    model,
+    test.data,
+    test.target,
+    display_labels=test.target_names
+)
+print('Classification report:', classification_report(test.target, labels))
