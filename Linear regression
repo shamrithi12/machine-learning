@@ -32,3 +32,8 @@ plt.ylabel("Weight")
 plt.title("Hieght vs Weight with Regression Line")
 plt.legend()
 plt.show()
+
+
+Knownvalue = int(input("\n Enter height value to predict weight"))
+findvalue = regressor.predict([[knownvalue]])
+print(f"when the height is {knownvalue}cm,the predicted weight is {findvalue[0]:.2f}")
