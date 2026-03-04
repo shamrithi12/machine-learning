@@ -3,51 +3,43 @@ import numpy as np
 import matplotlib.pyplot as plt
 from sklearn.cluster import KMeans
 from scipy.spatial.distance import cdist
-#LOAD DATASET
-df=pd.read_csv(r'C:\MSC DA -ML Datasets (2024 -25 Batch)\Seed_Data.csv') 
-df.head()
 
-
-
+df=pd.read_csv(r"C:\Users\KAUSI\Downloads\MSC DA -ML Datasets\MSC DA -ML Datasets (2024 -25 Batch)\Seed_Data.csv")
+df.head() 
 
 print("\nMissing values:")
 print(df.isna().sum())
 
-# SCATTER PLOT (Initial Data)
 plt.scatter(df['LK'], df['WK'], c='blue')
 plt.xlabel('LK')
 plt.ylabel('WK')
 plt.title("Original Data Distribution")
 plt.show()
 
-
+  
 edf = df[['LK', 'WK']].values
 distortion = []
 inertia = []
 k_range = range(2, 11)
 for k in k_range:
-kmeans = KMeans(n_clusters=k, random_state=42)
-kmeans.fit(edf)
-distortion.append(
-sum(np.min(cdist(edf, kmeans.cluster_centers_, 'euclidean'), axis=1)) / edf.shape[0])
- inertia.append(kmeans.inertia_)
-# PLOT ELBOW GRAPH
+ kmeans = KMeans(n_clusters=k, random_state=42)
+ kmeans.fit(edf)
+ distortion.append(
+ sum(np.min(cdist(edf, kmeans.cluster_centers_, 'euclidean'), axis=1)) / edf.shape[0])
+ inertia.append(kmeans.inertia_) 
+
 plt.plot(k_range, distortion, '-o')
 plt.xlabel("Number of Clusters (k)")
 plt.ylabel("Distortion")
 plt.title("Elbow Method")
 plt.show()
 
-
-
-
-# FINAL MODEL (k=3)
 kmeans = KMeans(n_clusters=3, random_state=42)
 kmeans.fit(edf)
-# PLOT CLUSTERS
+
 plt.scatter(df['LK'], df['WK'], c=kmeans.labels_, cmap='viridis')
 centroids = kmeans.cluster_centers_
-plt.scatter(centroids[:, 0], centroids[:, 1], 
+plt.scatter(centroids[:, 0], centroids[:, 1],  
 marker='o', c='red', s=200, label='Centroids')
 plt.xlabel('LK')
 plt.ylabel('WK')
