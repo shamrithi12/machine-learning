@@ -1,30 +1,25 @@
 import pandas as pd
-import numpy as np
-
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LogisticRegression
-from sklearn.metrics import accuracy_score, classification_report
+from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
 
+df = pd.read_csv("diabetes.csv")  
+print(df.head())
 
-# Load dataset (replace path if needed)
-data = pd.read_csv(r"C:\Users\TEMP.KCW.050\Downloads\MSC DA -ML Datasets\MSC DA -ML Datasets (2024 -25 Batch)\3.diabetes.csv")
-# Display first few rows
-print(data.head())
-
-X = data.drop("Outcome", axis=1)
-y = data["Outcome"]
+X = df.iloc[:, 0:8].values   
+y = df.iloc[:, 8].values    
 
 X_train, X_test, y_train, y_test = train_test_split(
-    X, y, test_size=0.2, random_state=42
+    X, y, test_size=0.33, random_state=10
 )
 
 model = LogisticRegression(max_iter=1000)
 model.fit(X_train, y_train)
-
 y_pred = model.predict(X_test)
 
-accuracy = accuracy_score(y_test, y_pred)
-print("Accuracy Score:", accuracy)
 
-print("Classification Report:\n")
+print("Accuracy:", accuracy_score(y_test, y_pred) * 100)
+print("\nConfusion Matrix:")
+print(confusion_matrix(y_test, y_pred))
+print("\nClassification Report:")
 print(classification_report(y_test, y_pred))
