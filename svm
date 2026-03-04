@@ -17,7 +17,6 @@ y_train = df_train['Type']
 X_test = df_test['Query']
 y_test = df_test['Type']
 
-
 model = Pipeline([
     ('tfidf', TfidfVectorizer(
         lowercase=True,
@@ -31,17 +30,13 @@ model = Pipeline([
         random_state=42
     ))
 ])
-
-
 start_time = time()
 model.fit(X_train, y_train)
 end_time = time()
+
 print("Training Time:", round(end_time - start_time, 2), "seconds")
 y_pred = model.predict(X_test)
 
-
-
-  
 ConfusionMatrixDisplay.from_estimator(
     model,
     X_test,
@@ -49,16 +44,13 @@ ConfusionMatrixDisplay.from_estimator(
     cmap='Blues'
 )
 plt.title("Confusion Matrix - SVM Chatbot Query Classification")
-  plt.show()
-
+plt.show()
 
 def predict_query_type(query):
     prediction = model.predict([query])[0]
     return prediction
 
-
-  print("\nSample Predictions:\n")
-
+print("\nSample Predictions:\n")
 queries = [
     "Who is the president of India?",
     "What does CPU stand for?",
@@ -66,7 +58,7 @@ queries = [
     "Where is the Eiffel Tower located?",
     "What is machine learning?"
 ]
-
 for q in queries:
     print(f"Query: {q}")
     print(f"Predicted Type: {predict_query_type(q)}\n")
+
